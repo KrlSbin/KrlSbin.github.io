@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Ruby gems compiling error on m1</title>
+<title>Address already in use</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="Ruby gems compiling error on m1" />
+<meta property="og:title" content="Address already in use" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="If you see this error while installing gems: compiling binder.cpp make: *** [binder.o] Error 1" />
-<meta property="og:description" content="If you see this error while installing gems: compiling binder.cpp make: *** [binder.o] Error 1" />
-<link rel="canonical" href="http://localhost:4000/2023/01/15/binder-error.html" />
-<meta property="og:url" content="http://localhost:4000/2023/01/15/binder-error.html" />
+<meta name="description" content="If you see this error when starting puma or webrick: Address already in use" />
+<meta property="og:description" content="If you see this error when starting puma or webrick: Address already in use" />
+<link rel="canonical" href="http://localhost:4000/2023/01/18/address-already-in-use.html" />
+<meta property="og:url" content="http://localhost:4000/2023/01/18/address-already-in-use.html" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-01-15T00:00:00+02:00" />
+<meta property="article:published_time" content="2023-01-18T00:00:00+02:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Ruby gems compiling error on m1" />
+<meta property="twitter:title" content="Address already in use" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-01-15T00:00:00+02:00","datePublished":"2023-01-15T00:00:00+02:00","description":"If you see this error while installing gems: compiling binder.cpp make: *** [binder.o] Error 1","headline":"Ruby gems compiling error on m1","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2023/01/15/binder-error.html"},"url":"http://localhost:4000/2023/01/15/binder-error.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-01-18T00:00:00+02:00","datePublished":"2023-01-18T00:00:00+02:00","description":"If you see this error when starting puma or webrick: Address already in use","headline":"Address already in use","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2023/01/18/address-already-in-use.html"},"url":"http://localhost:4000/2023/01/18/address-already-in-use.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" /></head>
 <body><header class="site-header" role="banner">
@@ -39,34 +39,32 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title p-name" itemprop="name headline">Ruby gems compiling error on m1</h1>
+        <h1 class="post-title p-name" itemprop="name headline">Address already in use</h1>
         <p class="post-meta">
-            <time class="dt-published" datetime="2023-01-15T00:00:00+02:00" itemprop="datePublished">Jan 15, 2023
+            <time class="dt-published" datetime="2023-01-18T00:00:00+02:00" itemprop="datePublished">Jan 18, 2023
             </time></p>
     </header>
 
     <div class="post-content e-content" itemprop="articleBody">
-        <p>If you see this error while installing gems:</p>
+        <p>If you see this error when starting puma or webrick:</p>
 
-<figure class="highlight"><pre><code class="language-liquid" data-lang="liquid">compiling binder.cpp
-make: *** [binder.o] Error 1</code></pre></figure>
+<figure class="highlight"><pre><code class="language-liquid" data-lang="liquid">Address already in use</code></pre></figure>
 
-<p>Check if compiler is configured for you ruby version:</p>
+<p>Check what process uses specific port (for example 3000):</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">$ </span>ruby <span class="nt">-e</span> <span class="s1">'puts RbConfig::CONFIG["CXX"]'</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">lsof <span class="nt">-wni</span> tcp:3000</code></pre></figure>
 
-<p>If you see <code class="language-plaintext highlighter-rouge">false</code> it means that you need to reinstall x-code</p>
+<p>You’ll see something like:</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">sudo rm</span> <span class="nt">-rf</span> /Library/Developer/CommandLineTools
-xcode-select <span class="nt">--install</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">COMMAND   PID      USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ruby    36893      john   10u  IPv4 0xfdc932745b076ae2      0t0  TCP 127.0.0.1:terabase <span class="o">(</span>LISTEN<span class="o">)</span></code></pre></figure>
 
-<p>After that you should see configured compiler:</p>
+<p>Use <code class="language-plaintext highlighter-rouge">kill</code> to terminate process by its PID:</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nv">$ </span>ruby <span class="nt">-e</span> <span class="s1">'puts RbConfig::CONFIG["CXX"]'</span>
-g++</code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">kill</span> <span class="nt">-9</span> 36893</code></pre></figure>
 
 
-    </div><a class="u-url" href="/2023/01/15/binder-error.html" hidden></a>
+    </div><a class="u-url" href="/2023/01/18/address-already-in-use.html" hidden></a>
 </article>
 
       </div>
